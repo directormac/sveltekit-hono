@@ -1,8 +1,9 @@
 import { decode } from 'decode-formdata';
-import type { Actions, PageServerLoad } from './$types';
+import type { Actions } from './$types';
 import type { AuthFormSchema } from '@types';
 import { parseApiResponse } from '@utils';
 import { fail, redirect } from '@sveltejs/kit';
+import { StatusCodes } from 'http-status-codes';
 
 export const actions: Actions = {
 	default: async ({ request, locals }) => {
@@ -14,7 +15,7 @@ export const actions: Actions = {
 			})
 		);
 		if (response.errors) {
-			return fail(400, { form, message: response.errors });
+			return fail(StatusCodes.UNPROCESSABLE_ENTITY, { form, errors: response.errors });
 		} else {
 			redirect(302, '/');
 		}

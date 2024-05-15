@@ -6,6 +6,8 @@
 
 	let currentTime = $state('');
 	let errors = $state<MappedErrors>();
+	let message = $state('');
+	let errorFields = $state<MappedErrors>();
 
 	$effect(() => {
 		const eventSource = new EventSource('/api/time');
@@ -20,8 +22,11 @@
 	});
 
 	$effect(() => {
-		if (form && form.errors) {
-			errors = form.errors as MappedErrors;
+		if (form && form.errors && typeof form.errors === 'object') {
+			errorFields = form.errors.fields;
+			message = form.errors.message;
+		} else if (form && typeof form.errors === 'string') {
+			message = form.errors;
 		}
 	});
 </script>
@@ -34,32 +39,32 @@
 	<div class="form-group">
 		<label for="username">Username</label>
 		<input name="username" type="text" required />
-		{#if errors && errors.username}
-			<p>Errors</p>
+		{#if errorFields && errorFields.username}
+			<p>{errorFields.username}</p>
 		{/if}
 	</div>
 
 	<div class="form-group">
 		<label for="email">Email</label>
 		<input name="email" type="email" required />
-		{#if errors && errors.email}
-			<p>{errors.email}</p>
+		{#if errorFields && errorFields.email}
+			<p>{errorFields.email}</p>
 		{/if}
 	</div>
 
 	<div class="form-group">
 		<label for="name">Name</label>
 		<input name="name" type="text" required />
-		{#if errors && errors.name}
-			<p>{errors.name}</p>
+		{#if errorFields && errorFields.name}
+			<p>{errorFields.name}</p>
 		{/if}
 	</div>
 
 	<div class="form-group">
 		<label for="password">Password</label>
 		<input name="password" type="password" required />
-		{#if errors && errors.password}
-			<p>{errors.password}</p>
+		{#if errorFields && errorFields.password}
+			<p>{errorFields.password}</p>
 		{/if}
 	</div>
 	<input type="submit" value="Sign Up" />
