@@ -23,7 +23,6 @@ export function processZodError<T = FieldErrors>(
 			if (!fields[fieldName]) {
 				fields[fieldName] = [];
 			}
-			// fields[fieldName].push(error.message);
 			(fields[fieldName] as string[]).push(error.message);
 		}
 	});
