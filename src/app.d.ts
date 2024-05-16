@@ -1,6 +1,6 @@
 // See https://kit.svelte.dev/docs/types#app
 
-import type { ClientType } from '$lib/api/client';
+import type { ClientType } from '$lib/client';
 import type { User, Session } from 'lucia';
 
 // for information about these interfaces

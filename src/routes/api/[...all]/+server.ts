@@ -1,4 +1,4 @@
-import { hono } from '$lib/api';
+import { hono } from '@server';
 import type { RequestHandler } from '@sveltejs/kit';
 
 export const GET: RequestHandler = ({ request }) => hono.fetch(request);

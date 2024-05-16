@@ -17,9 +17,9 @@ const config = {
 		// See https://kit.svelte.dev/docs/adapters for more information about adapters.
 		adapter: adapter(),
 		alias: {
-			'@api': './src/lib/api',
-			'@queries': './src/lib/api/db/queries',
-			'@mutations': './src/lib/api/db/mutations',
+			'@server': './src/lib/server',
+			'@queries': './src/lib/server/db/queries',
+			'@mutations': './src/lib/server/db/mutations',
 			'@schemas': './src/lib/schemas',
 			'@components': './src/lib/components',
 			'@utils': './src/lib/utils',

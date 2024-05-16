@@ -1,9 +1,9 @@
 import { hc } from 'hono/client';
-import type { AppType } from '$lib/api';
+import type { AppType } from '@server';
 import type { Handle } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
 import { parseApiResponse } from '@utils';
-import { auth } from '@api/auth';
+import { auth } from '$lib/server/auth';
 
 const injectApiHandle: Handle = async ({ event, resolve }) => {
 	const { api } = hc<AppType>('/', { fetch: event.fetch });

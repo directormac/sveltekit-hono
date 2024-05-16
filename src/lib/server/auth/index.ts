@@ -1,5 +1,5 @@
 import { DrizzlePostgreSQLAdapter } from '@lucia-auth/adapter-drizzle';
-import { db } from '@api/db';
+import { db } from '@server/db';
 import { session, user, type UserInsertSchema } from '@schemas';
 import { Lucia } from 'lucia';
 import { env } from '$env/dynamic/private';
@@ -36,6 +36,13 @@ export const createSessionCookie = async (userId: string): Promise<string> => {
 	const session = await auth.createSession(userId, {});
 
 	return auth.createSessionCookie(session.id).serialize();
+};
+
+export const argon2Options = {
+	memoryCost: 19456,
+	timeCost: 2,
+	outputLen: 32,
+	parallelism: 1
 };
 
 export * from './rules.auth';

@@ -1,7 +1,7 @@
-import type { AppBindings } from '@api';
-import { auth, createSessionCookie } from '@api/auth';
-import { queryAuthCredentials, queryUserUsernames } from '@api/db/queries';
-import { authGuardMiddleware, loginFormValidator, signUpFormValidator } from '@api/middlewares';
+import type { AppBindings } from '@server';
+import { auth, createSessionCookie } from '@server/auth';
+import { queryAuthCredentials, queryUserUsernames } from '@queries';
+import { authGuardMiddleware, loginFormValidator, signUpFormValidator } from '@server/middlewares';
 import { createUser } from '@mutations';
 import type { AuthFormSchema, FormErrorResponse, UserFormSchema } from '@types';
 import { Hono } from 'hono';

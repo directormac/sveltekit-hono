@@ -1,5 +1,5 @@
-import { type AppBindings } from '@api';
-import { authGuardMiddleware } from '@api/middlewares';
+import { type AppBindings } from '@server';
+import { authGuardMiddleware } from '@server/middlewares';
 import { zValidator } from '@hono/zod-validator';
 import { userFormSchema } from '@types';
 import { Hono } from 'hono';

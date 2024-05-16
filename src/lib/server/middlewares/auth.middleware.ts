@@ -1,4 +1,4 @@
-import { auth } from '@api/auth';
+import { auth } from '@server/auth';
 import { createMiddleware } from 'hono/factory';
 import { getCookie } from 'hono/cookie';
 import { zValidator } from '@hono/zod-validator';
@@ -11,7 +11,7 @@ import {
 } from '@types';
 import { HTTPException } from 'hono/http-exception';
 import { StatusCodes, ReasonPhrases } from 'http-status-codes';
-import type { AppBindings } from '@api';
+import type { AppBindings } from '@server';
 
 export const authMiddleware = createMiddleware<AppBindings>(async (c, next) => {
 	const sessionId = getCookie(c, auth.sessionCookieName) ?? null;
