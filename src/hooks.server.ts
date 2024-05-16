@@ -3,7 +3,7 @@ import type { AppType } from '@server';
 import type { Handle } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
 import { parseApiResponse } from '@utils';
-import { auth } from '$lib/server/auth';
+import { auth } from '@server/auth';
 
 const injectApiHandle: Handle = async ({ event, resolve }) => {
 	const { api } = hc<AppType>('/', { fetch: event.fetch });
@@ -23,8 +23,8 @@ const apiSessionHandle: Handle = async ({ event, resolve }) => {
 		event.locals.session = null;
 		return resolve(event);
 	} else {
-		// const { user, session } = request.data;
-		//
+		const { user, session } = request.data;
+
 		// event.locals.user = user;
 		// event.locals.session = session;
 		return resolve(event);
