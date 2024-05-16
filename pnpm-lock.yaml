@@ -11,6 +11,12 @@ importers:
       dotenv:
         specifier: ^16.4.5
         version: 16.4.5
+      lucia:
+        specifier: ^3.2.0
+        version: 3.2.0
+      oslo:
+        specifier: ^1.2.0
+        version: 1.2.0
     devDependencies:
       '@hono/zod-validator':
         specifier: ^0.2.1
@@ -75,12 +81,6 @@ importers:
       http-status-codes:
         specifier: ^2.3.0
         version: 2.3.0
-      lucia:
-        specifier: ^3.2.0
-        version: 3.2.0
-      oslo:
-        specifier: ^1.2.0
-        version: 1.2.0
       pino:
         specifier: ^9.1.0
         version: 9.1.0
