@@ -19,3 +19,6 @@
 		<input type="submit" value="logout" />
 	</form>
 {/if}
+
+<p>No account yet? <a href="/signup">Signup here</a></p>
+<p>Already have an account? <a href="/login">Login here</a></p>
