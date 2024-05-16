@@ -24,10 +24,10 @@
 	<form method="POST" action="/api/auth/logout">
 		<input type="submit" value="logout" />
 	</form>
+{:else}
+	<p>No account yet? <a href="/signup">Signup here</a></p>
+	<p>Already have an account? <a href="/login">Login here</a></p>
 {/if}
-
-<p>No account yet? <a href="/signup">Signup here</a></p>
-<p>Already have an account? <a href="/login">Login here</a></p>
 
 {#await healthcheck() then ok}
 	Server is {ok}
