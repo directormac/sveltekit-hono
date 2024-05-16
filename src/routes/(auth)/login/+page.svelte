@@ -1,61 +1,61 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import type { MappedErrors } from '@types';
+	import type { AuthFormSchema, MappedFieldErrors } from '@types';
 
 	let { form } = $props();
 
-	let currentTime = $state('');
+	let fields = $state<Partial<AuthFormSchema>>({});
 	let message = $state('');
-	let errorFields = $state<MappedErrors>();
-
-	$effect(() => {
-		const eventSource = new EventSource('/api/time');
-
-		eventSource.onmessage = (event) => {
-			currentTime = event.data;
-		};
-
-		return () => {
-			eventSource.close();
-		};
-	});
+	let errorFields = $state<MappedFieldErrors<AuthFormSchema>>();
 
 	$effect(() => {
 		if (form && typeof form.errors === 'object') {
-			errorFields = form.errors.fields;
+			errorFields = form.errors.fields as MappedFieldErrors<AuthFormSchema>;
 			message = form.errors.message;
 		} else if (form && typeof form.errors === 'string') {
 			message = form.errors;
 		}
 	});
+
+	$effect(() => {
+		if (form && form.fields) {
+			fields = form.fields;
+		}
+	});
+
+	export const snapshot = {
+		capture: () => ({ fields, message, errorFields }),
+		restore: (value) => {
+			fields = value.fields;
+			message = value.message;
+			errorFields = value.errorFields;
+		}
+	};
 </script>
 
 <h2>Login Page</h2>
-
-<p>{currentTime}</p>
-
+{#snippet field(name: keyof AuthFormSchema, type: HTMLInputElement['type'], label: string)}
+	<div class="form-group">
+		<label for={name}>{label}</label>
+		<input {name} {type} bind:value={fields[name]} />
+		{#if errorFields && errorFields[name]}
+			<p>{errorFields[name]}</p>
+		{/if}
+	</div>
+{/snippet}
 <form method="POST" use:enhance>
 	{#if message}
 		<p>{message}</p>
 	{/if}
 
-	<div class="form-group">
-		<label for="key">Username/Email </label>
-		<input name="key" type="text" />
-		{#if errorFields && errorFields.key}
-			<p>{errorFields.key}</p>
-		{/if}
-	</div>
+	{@render field('key', 'key', 'Username/Email')}
 
-	<div class="form-group">
-		<label for="password">Password</label>
-		<input name="password" type="password" />
-		{#if errorFields && errorFields.password}
-			<p>{errorFields.password}</p>
-		{/if}
-	</div>
+	{@render field('password', 'password', 'Password')}
+
 	<input type="submit" value="Login" />
 </form>
+
+<p>No account yet? <a href="/signup">Signup here</a></p>
 
 <style>
 	form {

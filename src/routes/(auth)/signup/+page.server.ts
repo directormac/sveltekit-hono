@@ -13,7 +13,7 @@ export const actions: Actions = {
 			})
 		);
 		if (response.status === StatusCodes.UNPROCESSABLE_ENTITY) {
-			return fail(StatusCodes.UNPROCESSABLE_ENTITY, { form, errors: response.errors });
+			return fail(StatusCodes.UNPROCESSABLE_ENTITY, { fields: form, errors: response.errors });
 		} else {
 			return {
 				message: response.data

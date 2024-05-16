@@ -15,7 +15,7 @@ export const actions: Actions = {
 			})
 		);
 		if (response.errors) {
-			return fail(StatusCodes.UNPROCESSABLE_ENTITY, { form, errors: response.errors });
+			return fail(StatusCodes.UNPROCESSABLE_ENTITY, { fields: form, errors: response.errors });
 		} else {
 			redirect(302, '/');
 		}
