@@ -1,32 +1,34 @@
 import { ZodError } from 'zod';
 
-export type MappedErrors = {
-	[key: string]: string[];
+type FieldErrors = Record<string, string[]>;
+
+export type MappedFieldErrors<T = FieldErrors> = {
+	[K in keyof T]: string[];
 };
 
-export type FormErrorResponse = {
+export type FormErrorResponse<T = FieldErrors> = {
 	message: string;
-	errors: MappedErrors;
+	fields: MappedFieldErrors<Partial<T>>;
 };
 
-export function processZodError(
+export function processZodError<T = FieldErrors>(
 	message: string = 'Invalid form',
 	zodError: ZodError<any>
 ): FormErrorResponse {
-	const errors: MappedErrors = {};
+	const fields: Partial<MappedFieldErrors<T>> = {};
 
 	zodError.errors.forEach((error) => {
 		if (error.path.length > 0) {
-			const fieldName = error.path[0] as string;
-			if (!errors[fieldName]) {
-				errors[fieldName] = [];
+			const fieldName = error.path[0] as keyof T;
+			if (!fields[fieldName]) {
+				fields[fieldName] = [];
 			}
-			errors[fieldName].push(error.message);
+			(fields[fieldName] as string[]).push(error.message);
 		}
 	});
 
 	return {
 		message,
-		errors
+		fields: fields as MappedFieldErrors<T>
 	};
 }

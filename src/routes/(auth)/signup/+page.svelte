@@ -1,69 +1,63 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import type { MappedErrors } from '@types';
+	import type { MappedFieldErrors, UserFormSchema } from '@types';
 
 	let { form } = $props();
 
-	let currentTime = $state('');
-	let errors = $state<MappedErrors>();
+	let fields = $state<Partial<UserFormSchema>>({});
+	let message = $state('');
+	let errorFields = $state<MappedFieldErrors<UserFormSchema>>();
 
 	$effect(() => {
-		const eventSource = new EventSource('/api/time');
-
-		eventSource.onmessage = (event) => {
-			currentTime = event.data;
-		};
-
-		return () => {
-			eventSource.close();
-		};
-	});
-
-	$effect(() => {
-		if (form && form.errors) {
-			errors = form.errors as MappedErrors;
+		if (form && form.errors && typeof form.errors === 'object') {
+			errorFields = form.errors.fields as MappedFieldErrors<UserFormSchema>;
+			message = form.errors.message;
+		} else if (form && typeof form.errors === 'string') {
+			message = form.errors;
 		}
 	});
+
+	$effect(() => {
+		if (form && form.fields) {
+			fields = form.fields;
+		}
+	});
+
+	export const snapshot = {
+		capture: () => ({ fields, message, errorFields }),
+		restore: (value) => {
+			fields = value.fields;
+			message = value.message;
+			errorFields = value.errorFields;
+		}
+	};
 </script>
 
 <h2>Login Page</h2>
 
-{currentTime}
+{#if message}
+	<p>{message}</p>
+{/if}
+
+{#snippet field(name: keyof UserFormSchema, type: HTMLInputElement['type'], label: string)}
+	<div class="form-group">
+		<label for={name}>{label}</label>
+		<input {name} {type} bind:value={fields[name]} />
+		{#if errorFields && errorFields[name]}
+			<p>{errorFields[name]}</p>
+		{/if}
+	</div>
+{/snippet}
 
 <form method="POST" use:enhance>
-	<div class="form-group">
-		<label for="username">Username</label>
-		<input name="username" type="text" required />
-		{#if errors && errors.username}
-			<p>Errors</p>
-		{/if}
-	</div>
-
-	<div class="form-group">
-		<label for="email">Email</label>
-		<input name="email" type="email" required />
-		{#if errors && errors.email}
-			<p>{errors.email}</p>
-		{/if}
-	</div>
-
-	<div class="form-group">
-		<label for="name">Name</label>
-		<input name="name" type="text" required />
-		{#if errors && errors.name}
-			<p>{errors.name}</p>
-		{/if}
-	</div>
-
-	<div class="form-group">
-		<label for="password">Password</label>
-		<input name="password" type="password" required />
-		{#if errors && errors.password}
-			<p>{errors.password}</p>
-		{/if}
-	</div>
+	{@render field('username', 'text', 'Username')}
+	{@render field('email', 'email', 'Email')}
+	{@render field('name', 'text', 'Name')}
+	{@render field('password', 'password', 'Password')}
 	<input type="submit" value="Sign Up" />
 </form>
+
+<p>Already have an account? <a href="/login">Login here</a></p>
 
 <style>
 	form {

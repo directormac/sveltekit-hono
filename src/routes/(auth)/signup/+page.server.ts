@@ -2,6 +2,7 @@ import { fail, type Actions } from '@sveltejs/kit';
 import type { UserFormSchema } from '@types';
 import { parseApiResponse } from '@utils';
 import { decode } from 'decode-formdata';
+import { StatusCodes } from 'http-status-codes';
 
 export const actions: Actions = {
 	default: async ({ request, locals }) => {
@@ -11,8 +12,8 @@ export const actions: Actions = {
 				form
 			})
 		);
-		if (response.status === 400) {
-			return fail(400, { form, errors: response.errors });
+		if (response.status === StatusCodes.UNPROCESSABLE_ENTITY) {
+			return fail(StatusCodes.UNPROCESSABLE_ENTITY, { fields: form, errors: response.errors });
 		} else {
 			return {
 				message: response.data

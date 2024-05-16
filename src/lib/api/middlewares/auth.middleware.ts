@@ -2,7 +2,13 @@ import { auth } from '@api/auth';
 import { createMiddleware } from 'hono/factory';
 import { getCookie } from 'hono/cookie';
 import { zValidator } from '@hono/zod-validator';
-import { authSchema, processZodError, userFormSchema } from '@types';
+import {
+	type AuthFormSchema,
+	type UserFormSchema,
+	authSchema,
+	processZodError,
+	userFormSchema
+} from '@types';
 import { HTTPException } from 'hono/http-exception';
 import { StatusCodes, ReasonPhrases } from 'http-status-codes';
 import type { AppBindings } from '@api';
@@ -54,14 +60,14 @@ export const adminGuardMiddleware = createMiddleware<AppBindings>(async (c, next
 
 export const loginFormValidator = zValidator('form', authSchema, (result, c) => {
 	if (!result.success) {
-		const response = processZodError('Invalid form', result.error);
-		return c.json(response, StatusCodes.BAD_REQUEST);
+		const response = processZodError<AuthFormSchema>('Invalid form', result.error);
+		return c.json(response, StatusCodes.UNPROCESSABLE_ENTITY);
 	}
 });
 
 export const signUpFormValidator = zValidator('form', userFormSchema, (result, c) => {
 	if (!result.success) {
-		const response = processZodError('Invalid form', result.error);
-		return c.json(response, StatusCodes.BAD_REQUEST);
+		const response = processZodError<UserFormSchema>('Invalid form', result.error);
+		return c.json(response, StatusCodes.UNPROCESSABLE_ENTITY);
 	}
 });

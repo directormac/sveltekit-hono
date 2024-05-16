@@ -3,6 +3,7 @@ import { auth, createSessionCookie } from '@api/auth';
 import { queryAuthCredentials, queryUserUsernames } from '@api/db/queries';
 import { authGuardMiddleware, loginFormValidator, signUpFormValidator } from '@api/middlewares';
 import { createUser } from '@mutations';
+import type { AuthFormSchema, FormErrorResponse, UserFormSchema } from '@types';
 import { Hono } from 'hono';
 import { HTTPException } from 'hono/http-exception';
 import { StatusCodes } from 'http-status-codes';
@@ -29,19 +30,25 @@ const route = new Hono<AppBindings>()
 			username: formData.username
 		});
 
-		if (userUsername)
-			throw new HTTPException(StatusCodes.BAD_REQUEST, {
-				message: 'Username already Exists'
-			});
+		if (userUsername) {
+			const response: FormErrorResponse<UserFormSchema> = {
+				message: 'Username already Exists',
+				fields: { username: ['Username already Exists'] }
+			};
+			return c.json(response, StatusCodes.UNPROCESSABLE_ENTITY);
+		}
 
 		const [userEmail] = await queryUserUsernames.execute({
 			username: formData.username
 		});
 
-		if (userEmail)
-			throw new HTTPException(StatusCodes.BAD_REQUEST, {
-				message: 'Email already Exists'
-			});
+		if (userEmail) {
+			const response: FormErrorResponse<UserFormSchema> = {
+				message: 'Email already Exists',
+				fields: { email: ['Email already Exists'] }
+			};
+			return c.json(response, StatusCodes.UNPROCESSABLE_ENTITY);
+		}
 
 		await createUser(formData);
 
@@ -52,18 +59,22 @@ const route = new Hono<AppBindings>()
 
 		const [user] = await queryAuthCredentials.execute({ username: key, email: key });
 
-		const invalidResponse = new HTTPException(StatusCodes.BAD_REQUEST, {
-			message: 'Invalid Credentials'
-		});
+		const invalidResponse: FormErrorResponse<AuthFormSchema> = {
+			message: 'Invalid Credentials',
+			fields: {
+				key: ['Invalid Credentials'],
+				password: ['Invalid Password']
+			}
+		};
 
 		if (!user) {
-			throw invalidResponse;
+			return c.json(invalidResponse, StatusCodes.UNPROCESSABLE_ENTITY);
 		}
 
 		const validPassword = await new Argon2id().verify(user.password, password);
 
 		if (!validPassword) {
-			throw invalidResponse;
+			return c.json(invalidResponse, StatusCodes.UNPROCESSABLE_ENTITY);
 		}
 
 		const cookie = await createSessionCookie(user.id);

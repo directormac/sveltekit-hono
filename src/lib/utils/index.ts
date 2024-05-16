@@ -1,5 +1,6 @@
-import type { ApiResponse, MappedErrors } from '@types';
+import type { ApiResponse, FormErrorResponse } from '@types';
 import type { ClientResponse } from 'hono/client';
+import { StatusCodes } from 'http-status-codes';
 
 // TODO: Improve this from hono regular responses
 
@@ -10,13 +11,20 @@ export async function parseApiResponse<T>(
 	const status = response.status;
 	let data: T | null = null;
 	let errors: ApiResponse<T>['errors'] = null;
+	let message: ApiResponse<T>['message'] = null;
 
 	if (response.ok) {
 		data = (await response.json()) as T;
 	} else {
-		errors =
-			response.status !== 400 ? await response.text() : ((await response.json()) as MappedErrors);
+		try {
+			errors =
+				status !== StatusCodes.UNPROCESSABLE_ENTITY
+					? await response.text()
+					: ((await response.json()) as FormErrorResponse);
+		} catch {
+			errors = 'Something went wrong.';
+		}
 	}
 
-	return { data, errors, status };
+	return { data, errors, status, message };
 }
