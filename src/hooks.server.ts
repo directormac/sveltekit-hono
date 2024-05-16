@@ -23,8 +23,8 @@ const apiSessionHandle: Handle = async ({ event, resolve }) => {
 		event.locals.session = null;
 		return resolve(event);
 	} else {
-		// const { user, session } = request.data;
-		//
+		const { user, session } = request.data;
+
 		// event.locals.user = user;
 		// event.locals.session = session;
 		return resolve(event);
