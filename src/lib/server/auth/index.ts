@@ -32,10 +32,20 @@ declare module 'lucia' {
 	}
 }
 
-export const createSessionCookie = async (userId: string): Promise<string> => {
+export const createSessionCookie = async (
+	userId: string
+): Promise<{
+	sessionId: string;
+	cookie: string;
+}> => {
 	const session = await auth.createSession(userId, {});
 
-	return auth.createSessionCookie(session.id).serialize();
+	const cookie = auth.createSessionCookie(session.id).serialize();
+
+	return {
+		sessionId: session.id,
+		cookie
+	};
 };
 
 export const argon2Options = {

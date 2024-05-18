@@ -1,5 +1,5 @@
 import { object, string, union, type infer as zInfer } from 'zod';
-import { requiredString, type ErrorMap } from './util.type';
+import { requiredString } from './util.type';
 import { createInsertSchema } from 'drizzle-zod';
 import { user } from '@schemas';
 
@@ -20,7 +20,7 @@ export const changePasswordSchema = object({
 	message: 'New Passwords do not match.'
 });
 
-export type ChangePasswordFormSchema = typeof changePasswordSchema;
+export type ChangePasswordFormSchema = zInfer<typeof changePasswordSchema>;
 
 const usernameSchema = requiredString('Username', { min: 3, max: 16 })
 	.trim()
@@ -44,14 +44,12 @@ export const authSchema = object({
 
 export type AuthFormSchema = zInfer<typeof authSchema>;
 
-export type AuthFormErrorsSchema = ErrorMap<typeof authSchema>;
-
 export const userFormSchema = createInsertSchema(user, {
 	id: (schema) => schema.id.optional(),
 	username: usernameSchema,
-	password
+	password,
+	createdAt: (schema) => schema.createdAt.optional(),
+	updatedAt: (schema) => schema.updatedAt.optional()
 });
 
 export type UserFormSchema = zInfer<typeof userFormSchema>;
-
-export type UserFormErrorsSchema = ErrorMap<typeof userFormSchema>;

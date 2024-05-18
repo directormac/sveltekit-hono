@@ -14,6 +14,9 @@ export async function parseApiResponse<T>(
 	let message: ApiResponse<T>['message'] = null;
 
 	if (response.ok) {
+		// TODO: Still getting wrong response here when returning things like custom object
+		// e.g { token: string}
+		// Should not cast as T
 		data = (await response.json()) as T;
 	} else {
 		try {
