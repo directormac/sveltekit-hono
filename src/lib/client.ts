@@ -21,4 +21,4 @@ const getClient = ({ fetch = globalThis.fetch }: GetClientOptions = {}) => {
 	return hc<AppType>('/', { fetch });
 };
 
-export { type ClientType, client, getClient };
+export { type ClientType, client, hc, getClient };
