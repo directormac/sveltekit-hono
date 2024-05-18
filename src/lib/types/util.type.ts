@@ -1,4 +1,4 @@
-import { ZodSchema, string, union, z, instanceof as zInstanceOf } from 'zod';
+import { number, object, string, union, z, instanceof as zInstanceOf } from 'zod';
 
 export const personNameSchema = string()
 	.max(100)
@@ -62,4 +62,8 @@ export const realNumberSchema = string().regex(/^\d+$/, {
 	message: 'Invalid number, Cannot be less than zero'
 });
 
-export type ErrorMap<T extends ZodSchema> = Record<keyof z.infer<T>, string[]>;
+export const queryParamsSchema = object({
+	q: string().default(''),
+	page: number().default(0),
+	limit: number().default(10)
+});
