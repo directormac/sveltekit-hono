@@ -14,6 +14,7 @@ export const actions: Actions = {
 				form
 			})
 		);
+
 		if (response.errors) {
 			return fail(StatusCodes.UNPROCESSABLE_ENTITY, { fields: form, errors: response.errors });
 		} else {

@@ -78,6 +78,9 @@ importers:
       hono:
         specifier: ^4.3.7
         version: 4.3.7
+      hono-rate-limiter:
+        specifier: ^0.3.0
+        version: 0.3.0(hono@4.3.7)
       http-status-codes:
         specifier: ^2.3.0
         version: 2.3.0
@@ -1633,6 +1636,11 @@ packages:
 
   help-me@5.0.0:
     resolution: {integrity: sha512-7xgomUX6ADmcYzFik0HzAxh/73YlKR9bmFzf51CZwR+b6YtzU2m0u49hQCqV6SvlqIqsaxovfwdvbnsw3b/zpg==}
+
+  hono-rate-limiter@0.3.0:
+    resolution: {integrity: sha512-QUS1N+DCZs8CKjpoHugvEvAp/+e+LUllPPnaIlATK9GyT26niQxn4H4V+O5kHwcsXjD3P3JOc0jMb7fnW6gpFQ==}
+    peerDependencies:
+      hono: ^4.1.1
 
   hono@4.3.7:
     resolution: {integrity: sha512-GXlsGnCAwGosu+COwYyYC8MwOY2L6Ihg9V1znYdMD8DHCJl+13Nk4o8dsBYJpae4oujjw24jBaITuYWVq2+V8Q==}
@@ -3847,6 +3855,10 @@ snapshots:
   heap@0.2.7: {}
 
   help-me@5.0.0: {}
+
+  hono-rate-limiter@0.3.0(hono@4.3.7):
+    dependencies:
+      hono: 4.3.7
 
   hono@4.3.7: {}
 

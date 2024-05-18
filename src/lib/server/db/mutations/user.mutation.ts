@@ -34,6 +34,19 @@ export const updateUser = async (id: string, form: UserFormSchema) =>
 		return updatedUser;
 	});
 
+export const changePassword = async (id: string, newPassword: string) =>
+	await db.transaction(async (tx) => {
+		const hashedPassword = await new Argon2id().hash(newPassword);
+		const [updatedUser] = await tx
+			.update(user)
+			.set({
+				password: hashedPassword
+			})
+			.where(eq(user.id, id))
+			.returning({ id: user.id });
+		return updatedUser;
+	});
+
 export const deleteUsers = async (ids: string[]) =>
 	await db.transaction(async (tx) => {
 		for (const id of ids) {

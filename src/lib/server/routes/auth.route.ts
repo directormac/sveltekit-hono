@@ -52,7 +52,9 @@ const route = new Hono<AppBindings>()
 
 		await createUser(formData);
 
-		return c.redirect('/login');
+		return c.json({
+			message: 'Success'
+		});
 	})
 	.post('/login', loginFormValidator, async (c) => {
 		const { key, password } = c.req.valid('form');
@@ -63,7 +65,7 @@ const route = new Hono<AppBindings>()
 			message: 'Invalid Credentials',
 			fields: {
 				key: ['Invalid Credentials'],
-				password: ['Invalid Password']
+				password: ['Invalid Credentials']
 			}
 		};
 
@@ -77,13 +79,15 @@ const route = new Hono<AppBindings>()
 			return c.json(invalidResponse, StatusCodes.UNPROCESSABLE_ENTITY);
 		}
 
-		const cookie = await createSessionCookie(user.id);
+		const { cookie, sessionId } = await createSessionCookie(user.id);
 
 		c.header('Set-Cookie', cookie, {
 			append: true
 		});
 
-		return c.redirect('/');
+		return c.json({
+			message: sessionId
+		});
 	})
 	.post('/logout', async (c) => {
 		if (c.var.session) {
@@ -96,6 +100,9 @@ const route = new Hono<AppBindings>()
 				message: 'You are not logged in!'
 			});
 		}
+	})
+	.get('/pogi/:id', async (c) => {
+		return c.json({ message: 'true' });
 	});
 
 export default route;

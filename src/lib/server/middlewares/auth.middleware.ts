@@ -14,7 +14,12 @@ import { StatusCodes, ReasonPhrases } from 'http-status-codes';
 import type { AppBindings } from '@server';
 
 export const authMiddleware = createMiddleware<AppBindings>(async (c, next) => {
-	const sessionId = getCookie(c, auth.sessionCookieName) ?? null;
+	let sessionId = getCookie(c, auth.sessionCookieName) ?? null;
+
+	if (!sessionId) {
+		const token = c.req.header('Authorization') ?? null;
+		sessionId = auth.readBearerToken(token ?? '');
+	}
 
 	if (!sessionId) {
 		c.set('session', null);
