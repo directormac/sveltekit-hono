@@ -20,15 +20,26 @@
 <p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
 
 {#if user}
-	<p>welcome back, {user.name}!</p>
-	<form method="POST" action="/api/auth/logout">
-		<input type="submit" value="logout" />
-	</form>
+	<div style="display: grid; gap: 1rem;">
+		<p>welcome back, {user.name}!</p>
+
+		{#if user.role === 'admin'}
+			<a href="/admin/users">Manage Users</a>
+		{/if}
+
+		<form method="POST" action="/api/auth/logout">
+			<input type="submit" value="logout" />
+		</form>
+	</div>
 {:else}
-	<p>No account yet? <a href="/signup">Signup here</a></p>
-	<p>Already have an account? <a href="/login">Login here</a></p>
+	<div style="display: grid; gap: 1rem;">
+		<p>No account yet? <a href="/signup">Signup here</a></p>
+		<p>Already have an account? <a href="/login">Login here</a></p>
+	</div>
 {/if}
 
 {#await healthcheck() then ok}
-	Server is {ok}
+	<div style="padding: 1rem 1rem 0 0;">
+		Server is {ok}
+	</div>
 {/await}
