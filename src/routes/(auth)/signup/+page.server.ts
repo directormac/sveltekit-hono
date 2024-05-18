@@ -1,4 +1,4 @@
-import { fail, type Actions } from '@sveltejs/kit';
+import { fail, redirect, type Actions } from '@sveltejs/kit';
 import type { UserFormSchema } from '@types';
 import { parseApiResponse } from '@utils';
 import { decode } from 'decode-formdata';
@@ -15,9 +15,7 @@ export const actions: Actions = {
 		if (response.status === StatusCodes.UNPROCESSABLE_ENTITY) {
 			return fail(StatusCodes.UNPROCESSABLE_ENTITY, { fields: form, errors: response.errors });
 		} else {
-			return {
-				message: response.data
-			};
+			redirect(302, '/login');
 		}
 	}
 };
