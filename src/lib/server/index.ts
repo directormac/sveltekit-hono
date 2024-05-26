@@ -59,6 +59,7 @@ const routes = hono
 	.get('/healthcheck', (c) => c.text('OK'))
 	.get('/time', (c) => {
 		return streamSSE(c, async (stream) => {
+			// eslint-disable-next-line no-constant-condition
 			while (true) {
 				await stream.writeSSE({
 					data: format(new Date(), 'MMMM do yyyy HH:mm:ss'),
