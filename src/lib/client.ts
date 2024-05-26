@@ -1,7 +1,5 @@
-import type { routes } from './server';
+import type { AppType } from './server';
 import { hc } from 'hono/client';
-
-type AppType = typeof routes;
 
 const client = hc<AppType>('/');
 type ClientType = typeof client;
