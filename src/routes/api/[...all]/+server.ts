@@ -1,9 +1,15 @@
 import { hono } from '@server';
 import type { RequestHandler } from '@sveltejs/kit';
 
-export const GET: RequestHandler = ({ request }) => hono.fetch(request);
-export const PUT: RequestHandler = ({ request }) => hono.fetch(request);
-export const DELETE: RequestHandler = ({ request }) => hono.fetch(request);
-export const POST: RequestHandler = ({ request }) => hono.fetch(request);
-export const PATCH: RequestHandler = ({ request }) => hono.fetch(request);
-export const fallback: RequestHandler = ({ request }) => hono.fetch(request);
+export const GET: RequestHandler = ({ request, platform }) =>
+	hono.request(request, {}, platform?.env || {});
+export const PUT: RequestHandler = ({ request, platform }) =>
+	hono.request(request, {}, platform?.env || {});
+export const DELETE: RequestHandler = ({ request, platform }) =>
+	hono.fetch(request, platform?.env || {});
+export const POST: RequestHandler = ({ request, platform }) =>
+	hono.fetch(request, platform?.env || {});
+export const PATCH: RequestHandler = ({ request, platform }) =>
+	hono.fetch(request, platform?.env || {});
+export const fallback: RequestHandler = ({ request, platform }) =>
+	hono.fetch(request, platform?.env || {});
